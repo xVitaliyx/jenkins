@@ -27,12 +27,12 @@ pipeline {
                     echo "Checking Apache logs for 4xx and 5xx errors..."
                     // Search for HTTP status codes 4xx or 5xx
                     sh '''
-                        if sudo grep -E "HTTP/1.[01]\" [45][0-9]{2}" ${LOG_FILE}; then
-                            echo "Errors found in logs!"
-                            exit 1
-                        else
-                            echo "No critical errors found in logs."
-                        fi
+                       if sudo grep -E "HTTP/1\.[01]" "[45][0-9]{2}" "${LOG_FILE}"; then
+                          echo "Errors found in logs!"
+                             exit 1
+                           else
+                             echo "No critical errors found in logs."
+                                     fi
                     '''
                 }
             }
