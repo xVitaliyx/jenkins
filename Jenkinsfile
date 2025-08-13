@@ -21,22 +21,24 @@ pipeline {
             }
         }
 
-        stage('Check Apache Logs for Errors') {
-            steps {
-                script {
-                    echo "Checking Apache logs for 4xx and 5xx errors..."
-                    // Search for HTTP status codes 4xx or 5xx
-                    sh '''
-if sudo grep -Eq '\bHTTP/1\.[01]\s+[45][0-9]{2}\b' -- "${LOG_FILE}"; then
+stage('Check Apache Logs for Errors') {
+    steps {
+        script {
+            echo "Checking Apache logs for 4xx and 5xx errors..."
+            // Визначити шлях до лог файлу
+            def LOG_FILE = "/var/log/apache2/access.log"  // або ваш шлях
+            
+            sh """
+if sudo grep -Eq '\\bHTTP/1\\.[01]\\s+[45][0-9]{2}\\b' -- "${LOG_FILE}"; then
     echo "Знайдено помилки HTTP 4xx/5xx в логах: ${LOG_FILE}"
     exit 1
 else
     echo "Критичних помилок HTTP 4xx/5xx в логах не знайдено."
-fi                    '''
-                }
-            }
+fi
+            """
         }
-
+    }
+}
         stage('Deploy Application') {
             steps {
                 script {
